@@ -29,7 +29,9 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - run: echo "saying hello" > output.txt
+      - run:
+          name: say hello
+          command: echo "saying hello" > output.txt
 
       - persist_to_workspace:
           paths:
