@@ -29,14 +29,14 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - run:
-          name: say hello
-          command: echo saying hello > output.txt
+      - run: mkdir -p workspace
+      - run: echo "Hello, world!" > workspace/echo-output.txt
 
+      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: .
+          root: workspace
           paths:
-            - output.txt
+            - echo-output.txt
 
   print-output:
     docker:
@@ -44,8 +44,8 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: /tmp/output.txt
-      - run: cat /tmp/output.txt
+          at: /tmp/workspace
+      - run: cat /tmp/workspace/output.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
