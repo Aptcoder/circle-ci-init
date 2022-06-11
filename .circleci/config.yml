@@ -25,7 +25,7 @@ jobs:
           name: "print hi"
           command: echo hi from $Name
 
-  save_hello_output:
+  save-hello-output:
     docker:
       - image: cimg/base:stable
     steps:
@@ -35,7 +35,7 @@ jobs:
           paths:
             - output.txt
 
-  print_output:
+  print-output:
     docker:
       - image: cimg/base:stable
 
@@ -52,6 +52,6 @@ workflows:
       - say-hello
       - print-hi:
           requires: [say-hello]
-      - save_hello_output
-      - print_output:
-          requires: [save_hello_output]
+      - save-hello-output
+      - print-output:
+          requires: [save-hello-output]
