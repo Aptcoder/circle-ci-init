@@ -23,7 +23,7 @@ jobs:
     steps:
       - run:
           name: "print hi"
-          command: "echo hi"
+          command: echo hi from $Name
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
