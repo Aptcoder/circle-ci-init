@@ -53,3 +53,6 @@ workflows:
       - say-hello
       - print-hi:
           requires: [say-hello]
+      - save_hello_output
+      - print_output:
+          requires: [save_hello_output]
