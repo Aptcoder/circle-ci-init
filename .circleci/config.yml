@@ -33,9 +33,9 @@ jobs:
           name: say hello
           command: echo saying hello > output.txt
 
-      # - persist_to_workspace:
-      #     paths:
-      #       - output.txt
+      - persist_to_workspace:
+          paths:
+            - output.txt
 
   print-output:
     docker:
