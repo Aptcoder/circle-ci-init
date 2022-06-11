@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: output.txt
+          at: /tmp/output.txt
       - run: cat output.txt
 
 # Invoke jobs via workflows
