@@ -13,17 +13,17 @@ jobs:
       - checkout
       - run: "echo Hello world!"
 
-  create_infrastructure:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-              --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+  # create_infrastructure:
+  #   docker:
+  #     - image: amazon/aws-cli
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Create Cloudformation Stack
+  #         command: |
+  #           aws cloudformation deploy \
+  #             --template-file template.yml \
+  #             --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
 
   configure_infra:
@@ -33,7 +33,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["	e3:80:30:5d:ad:2b:0c:e1:61:89:00:36:87:c5:37:5f"]
+          fingerprints: ["e3:80:30:5d:ad:2b:0c:e1:61:89:00:36:87:c5:37:5f"]
 
       - run:
           name: Install ansible
@@ -50,4 +50,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - myJob1
-      - create_infrastructure
+      - configure_infra
