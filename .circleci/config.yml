@@ -6,54 +6,30 @@ commands:
     steps:
       - run: "echo pipeline id $CIRCLE_WORKFLOW_ID"
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  myJob1:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: "echo Hello world!"
+
+  create_infrastructure:
+    docker:
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-  print-hi:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - print_pipeline_id
-
-  save-hello-output:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run: mkdir -p workspace
-      - run: echo "Hello, world!" > workspace/echo-output.txt
-
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
-      - persist_to_workspace:
-          root: workspace
-          paths:
-            - echo-output.txt
-
-  print-output:
-    docker:
-      - image: cimg/base:stable
-
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run: cat /tmp/workspace/echo-output.txt
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --region us-east-1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
-      - print-hi:
-          requires: [say-hello]
-      - save-hello-output
-      - print-output:
-          requires: [save-hello-output]
+      - myJob1
+      - create_infrastructure
