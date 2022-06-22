@@ -28,7 +28,7 @@ jobs:
 
   configure_infra:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.10.0-alpine
 
     steps:
       - checkout
