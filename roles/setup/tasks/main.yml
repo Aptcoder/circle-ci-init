@@ -1,0 +1,40 @@
+---
+- name: setup task file
+  become: true
+  yum:
+    update_cache: true
+
+- name: upgrade all packages
+  become: true
+  yum:
+    name: "*"
+    state: latest
+
+- name: install node
+  become_user: ec2-user
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+    . ~/.nvm/nvm.sh
+    nvm install 14.0
+    node -e "console.log('Running Node.js ' + process.version)"
+    npm install pm2 -g
+    nvm which node
+  register: print_result
+
+- name: print message
+  debug:
+    msg: "{{ print_result.stdout_lines }}"
+
+- name: make web dir
+  become: true
+  shell: mkdir -p web
+
+- name: copy index file
+  become: true
+  copy:
+    src: index.js
+    dest: /home/ec2-user/web/index.js
+
+- name: start server
+  become_user: ec2-user
+  shell: "pm2 start /home/ec2-user/web/index.js"
